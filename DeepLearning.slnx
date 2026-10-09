@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="LinearAlgebra/LinearAlgebra.vcxproj" Id="910a22fe-9feb-4cef-a1a9-f7fa0b03e655" />
+</Solution>
