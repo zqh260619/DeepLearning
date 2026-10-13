@@ -20,11 +20,17 @@ namespace LinearAlgebra
 		T& operator()(size_t row, size_t col) { return data_[get_index(row, col)]; }
 		const T& operator()(size_t row, size_t col) const { return data_[get_index(row, col)]; }
 
-		Matrix calculate(func_type func) const;
+		Matrix<T> calculate(func_type func) const;
+
+		Matrix<T> operator+(const Matrix& other);
+		Matrix<T> operator-();
+		Matrix<T> operator-(const Matrix& other) { return *this + (-other); }
+		Matrix<T> operator*(const T& scalar);
+		Matrix<T> operator*(const Matrix& other);
 
 	private:
 		size_t rows_, cols_;
-		size_t size_;
+		size_t size_;//total size of the matrix
 		std::vector<T> data_;
 
 		size_t get_index(size_t row, size_t col) const
@@ -46,6 +52,39 @@ namespace LinearAlgebra
 		for (size_t i = 0; i < this->size_; ++i)
 		{
 			result.data_[i] = func(this->data_[i]);
+		}
+		return result;
+	}
+
+	template<typename T>
+	inline Matrix<T> Matrix<T>::operator+(const Matrix& other)
+	{
+		Matrix<T> result(rows_, cols_);
+		for (size_t i = 0; i < this->size_; ++i)
+		{
+			result.data_[i] = this->data_[i] + other.data_[i];
+		}
+		return result;
+	}
+
+	template<typename T>
+	inline Matrix<T> Matrix<T>::operator-()
+	{
+		Matrix<T> result(rows_, cols_);
+		for (size_t i = 0; i < this->size_; ++i)
+		{
+			result.data_[i] = -this->data_[i];
+		}
+		return result;
+	}
+
+	template<typename T>
+	inline Matrix<T> Matrix<T>::operator*(const T& scalar)
+	{
+		Matrix<T> result(rows_, cols_);
+		for (size_t i = 0; i < this->size_; ++i)
+		{
+			result.data_[i] = this->data_[i] * scalar;
 		}
 		return result;
 	}
