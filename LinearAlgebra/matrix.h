@@ -2,6 +2,7 @@
 
 #include<vector>
 #include<iterator>
+#include<stdexcept>
 
 namespace LinearAlgebra
 {
