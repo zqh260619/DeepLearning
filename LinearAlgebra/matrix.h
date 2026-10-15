@@ -31,6 +31,7 @@ namespace LinearAlgebra
 		Matrix<T>& operator+=(const Matrix<T>& other) { *this = *this + other; return *this; }
 		Matrix<T>& operator-=(const Matrix<T>& other) { *this = *this - other; return *this; }
 		Matrix<T>& operator*=(const T& scalar) { *this = *this * scalar; return *this; }
+		Matrix<T>& operator*=(const Matrix<T>& other) { *this = *this * other; return *this; }
 
 	private:
 		size_t rows_, cols_;
@@ -63,7 +64,7 @@ namespace LinearAlgebra
 	template<typename T>
 	inline Matrix<T> Matrix<T>::operator+(const Matrix& other)
 	{
-		if (this->rows_ != other.rows_ || this.cols_ != other.cols_)
+		if (this->rows_ != other.rows_ || this->cols_ != other.cols_)
 		{
 			throw std::invalid_argument("Incompatible matrix dimensions");
 		}
@@ -95,6 +96,31 @@ namespace LinearAlgebra
 		for (size_t i = 0; i < this->size_; ++i)
 		{
 			result.data_[i] = this->data_[i] * scalar;
+		}
+		return result;
+	}
+
+	template<typename T>
+	Matrix<T> Matrix<T>::operator*(const Matrix<T>& other)
+	{
+		if (this->cols_ != other.rows_)
+		{
+			throw std::invalid_argument("Incompatible matrix dimensions");
+		}
+
+		Matrix<T> result(this->rows_, other.cols_);
+
+		for (size_t i = 0; i < this->rows_; ++i)
+		{
+			for (size_t j = 0; j < other.cols_; ++j)
+			{
+				T sum = T();
+				for (size_t k = 0; k < this->cols_; ++k)
+				{
+					sum += (*this)(i, k) * other(k, j);
+				}
+				result(i, j) = sum;
+			}
 		}
 		return result;
 	}
