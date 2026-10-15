@@ -4,4 +4,5 @@
     <Platform Name="x86" />
   </Configurations>
   <Project Path="LinearAlgebra/LinearAlgebra.vcxproj" Id="910a22fe-9feb-4cef-a1a9-f7fa0b03e655" />
+  <Project Path="test/test.vcxproj" Id="f5efb4cb-fd89-42e5-a036-d20da7698790" />
 </Solution>
