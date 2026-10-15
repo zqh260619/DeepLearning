@@ -20,9 +20,9 @@ namespace LinearAlgebra
 				T sum = T();
 				for (size_t k = 0; k < this->cols_; ++k)
 				{
-					sum += this->data_[*this(i, k)] * other.data_[other(k, j)];
+					sum += (*this)(i, k) * other(k, j);
 				}
-				result.data_[result(i, j)] = sum;
+				result(i, j) = sum;
 			}
 		}
 		return result;
