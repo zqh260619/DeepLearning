@@ -23,11 +23,14 @@ namespace LinearAlgebra
 
 		Matrix<T> calculate(func_type func) const;
 
-		Matrix<T> operator+(const Matrix& other);
+		Matrix<T> operator+(const Matrix<T>& other);
 		Matrix<T> operator-();
-		Matrix<T> operator-(const Matrix& other) { return *this + (-other); }
+		Matrix<T> operator-(const Matrix<T>& other) { return *this + (-other); }
 		Matrix<T> operator*(const T& scalar);
-		Matrix<T> operator*(const Matrix& other);
+		Matrix<T> operator*(const Matrix<T>& other);
+		Matrix<T>& operator+=(const Matrix<T>& other) { *this = *this + other; return *this; }
+		Matrix<T>& operator-=(const Matrix<T>& other) { *this = *this - other; return *this; }
+		Matrix<T>& operator*=(const T& scalar) { *this = *this * scalar; return *this; }
 
 	private:
 		size_t rows_, cols_;
@@ -60,7 +63,13 @@ namespace LinearAlgebra
 	template<typename T>
 	inline Matrix<T> Matrix<T>::operator+(const Matrix& other)
 	{
+		if (this->rows_ != other.rows_ || this.cols_ != other.cols_)
+		{
+			throw std::invalid_argument("Incompatible matrix dimensions");
+		}
+
 		Matrix<T> result(rows_, cols_);
+
 		for (size_t i = 0; i < this->size_; ++i)
 		{
 			result.data_[i] = this->data_[i] + other.data_[i];
