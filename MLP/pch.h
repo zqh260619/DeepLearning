@@ -3,6 +3,7 @@
 #include<iostream>
 #include<iterator>
 #include<random>
+#include<initializer_list>
 
 #include"../LinearAlgebra/matrix.h"
 
