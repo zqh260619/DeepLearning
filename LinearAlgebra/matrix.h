@@ -16,6 +16,7 @@ namespace LinearAlgebra
 		Matrix(size_t rows, size_t cols) :
 			rows_(rows), cols_(cols), data_(rows* cols, 0), size_(rows* cols) {}
 		Matrix(const Matrix& other) = default;
+		Matrix(Matrix&& other) noexcept = default;
 		~Matrix() = default;
 
 		T& operator()(size_t row, size_t col) { return data_[get_index(row, col)]; }
