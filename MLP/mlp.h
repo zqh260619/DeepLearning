@@ -11,15 +11,15 @@ namespace MLP
 {
 	using LinearAlgebra::Matrix;
 
-	class layer
-	{
-	public:
-		layer() = delete;
-		~layer() = default;
+	//class layer
+	//{
+	//public:
+	//	layer() = delete;
+	//	~layer() = default;
 
-	private:
+	//private:
 
-	};
+	//};
 
 	template<typename T>
 	class mlp
