@@ -13,6 +13,19 @@ namespace MLP
 	using LinearAlgebra::Matrix;
 
 	template<typename T>
+	struct ActFn
+	{
+		using func_type = T(*)(T);
+
+		func_type f = nullptr;
+		func_type df = nullptr;
+
+		T operator()(T x) const { return f(x); }
+		T grad(T x) const { return df(x); }
+
+	};
+
+	template<typename T>
 	T sigmoid(T x)
 	{
 		return 1 / (1 + std::exp(-x));
