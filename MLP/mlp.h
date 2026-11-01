@@ -4,12 +4,37 @@
 #include<random>
 #include<vector>
 #include<initializer_list>
+#include<cmath>
 
 #include"../LinearAlgebra/matrix.h"
 
 namespace MLP
 {
 	using LinearAlgebra::Matrix;
+
+	template<typename T>
+	T sigmoid(T x)
+	{
+		return 1 / (1 + std::exp(-x));
+	}
+	template<typename T>
+	T D_sigmoid(T x)
+	{
+		return sigmoid(x) * (1 - sigmoid(x));
+	}
+
+	template<typename T>
+	T relu(T x)
+	{
+		return std::max(static_cast<T>(0), x);
+	}
+	template<typename T>
+	T D_relu(T x)
+	{
+		return x > 0 ? static_cast<T>(1) : static_cast<T>(0);
+	}
+
+
 
 	//class layer
 	//{
