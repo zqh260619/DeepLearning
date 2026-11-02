@@ -5,6 +5,7 @@
 #include<vector>
 #include<initializer_list>
 #include<cmath>
+#include<algorithm>
 
 #include"../LinearAlgebra/matrix.h"
 
@@ -12,39 +13,34 @@ namespace MLP
 {
 	using LinearAlgebra::Matrix;
 
-	template<typename T>
 	struct ActFn
 	{
-		using func_type = T(*)(T);
+		using func_type = float(*)(float);
 
 		func_type f = nullptr;
 		func_type df = nullptr;
 
-		T operator()(T x) const { return f(x); }
-		T grad(T x) const { return df(x); }
+		float operator()(float x) const { return f(x); }
+		float grad(float x) const { return df(x); }
 
 	};
 
-	template<typename T>
-	T sigmoid(T x)
+	inline float sigmoid(float x)
 	{
-		return 1 / (1 + std::exp(-x));
+		return 1.0f / (1.0f + std::exp(-x));
 	}
-	template<typename T>
-	T D_sigmoid(T x)
+	inline float D_sigmoid(float x)
 	{
-		return sigmoid(x) * (1 - sigmoid(x));
+		return sigmoid(x) * (1.0f - sigmoid(x));
 	}
 
-	template<typename T>
-	T relu(T x)
+	inline float relu(float x)
 	{
-		return std::max(static_cast<T>(0), x);
+		return std::max(0.0f, x);
 	}
-	template<typename T>
-	T D_relu(T x)
+	inline float D_relu(float x)
 	{
-		return x > 0 ? static_cast<T>(1) : static_cast<T>(0);
+		return x > 0.0f ? 1.0f : 0.0f;
 	}
 
 
@@ -59,26 +55,24 @@ namespace MLP
 
 	//};
 
-	template<typename T>
 	class mlp
 	{
 	public:
-		using func_type = T(*)(T);
+		using func_type = float(*)(float);
 
 		mlp() = delete;
-		mlp(std::initializer_list<int> layer_sizes, std::initializer_list<func_type> activation_functions);
+		mlp(std::initializer_list<int> layer_sizes, std::initializer_list<func_type> activation_funcs);
 		~mlp() = default;
 
 	private:
-		std::vector<Matrix<T>> weights;
-		std::vector<Matrix<T>> biases;
+		std::vector<Matrix> weights;
+		std::vector<Matrix> biases;
 		std::vector<func_type> activation_functions;
-		std::vector<Matrix<T>> layers;
+		std::vector<Matrix> layers;
 
 	};
 
-	template<typename T>
-	inline mlp<T>::mlp(std::initializer_list<int> layer_sizes, std::initializer_list<func_type> activation_funcs)
+	inline mlp::mlp(std::initializer_list<int> layer_sizes, std::initializer_list<func_type> activation_funcs)
 	{
 		if (layer_sizes.size() < 2)
 		{
@@ -96,12 +90,12 @@ namespace MLP
 				throw std::invalid_argument("Layer sizes must be positive integers");
 			}
 
-			weights.push_back(Matrix<T>(layer_sizes.begin()[i + 1], layer_sizes.begin()[i]));
-			biases.push_back(Matrix<T>(layer_sizes.begin()[i + 1], 1));
-			layers.push_back(Matrix<T>(layer_sizes.begin()[i], 1));
+			weights.push_back(Matrix(layer_sizes.begin()[i + 1], layer_sizes.begin()[i]));
+			biases.push_back(Matrix(layer_sizes.begin()[i + 1], 1));
+			layers.push_back(Matrix(layer_sizes.begin()[i], 1));
 		}
 
-		layers.push_back(Matrix<T>(layer_sizes.begin()[layer_sizes.size() - 1], 1));
+		layers.push_back(Matrix(layer_sizes.begin()[layer_sizes.size() - 1], 1));
 		activation_functions = std::vector<func_type>(activation_funcs);
 	}
 
