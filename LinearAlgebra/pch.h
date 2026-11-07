@@ -1,7 +1,6 @@
 ﻿#include<vector>
-#include<cmath>
-#include<iostream>
 #include<iterator>
+#include<stdexcept>
 
 #ifndef PCH_H
 #define PCH_H

@@ -1,9 +1,9 @@
-﻿#include<vector>
-#include<cmath>
-#include<iostream>
-#include<iterator>
+﻿#include<iostream>
 #include<random>
+#include<vector>
 #include<initializer_list>
+#include<cmath>
+#include<algorithm>
 
 #include"../LinearAlgebra/matrix.h"
 
