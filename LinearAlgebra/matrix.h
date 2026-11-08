@@ -3,6 +3,7 @@
 #include<vector>
 #include<iterator>
 #include<stdexcept>
+#include<random>
 
 namespace LinearAlgebra
 {
@@ -24,6 +25,7 @@ namespace LinearAlgebra
 		const float& operator()(size_t row, size_t col) const { return data_[get_index(row, col)]; }
 
 		Matrix calculate(func_type func) const;
+		void set_random(float mu, float sigma, std::mt19937& gen);
 
 		Matrix operator+(const Matrix& other) const;
 		Matrix operator-() const;
@@ -60,6 +62,16 @@ namespace LinearAlgebra
 			result.data_[i] = func(this->data_[i]);
 		}
 		return result;
+	}
+
+	inline void Matrix::set_random(float mu, float sigma,std::mt19937& gen)
+	{
+		std::normal_distribution<float> dist(mu, sigma);
+
+		for (auto& i : data_)
+		{
+			i = dist(gen);
+		}
 	}
 
 	inline Matrix Matrix::operator+(const Matrix& other) const

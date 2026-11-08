@@ -1,6 +1,7 @@
 ﻿#include<vector>
 #include<iterator>
 #include<stdexcept>
+#include<random>
 
 #ifndef PCH_H
 #define PCH_H
