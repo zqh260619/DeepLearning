@@ -27,6 +27,8 @@ namespace LinearAlgebra
 		Matrix calculate(func_type func) const;
 		void set_random_normal(float mu, float sigma, std::mt19937& gen);
 		void set_random_uniform(float min, float max, std::mt19937& gen);
+		size_t rows() const { return rows_; }
+		size_t cols() const { return cols_; }
 
 		Matrix operator+(const Matrix& other) const;
 		Matrix operator-() const;
