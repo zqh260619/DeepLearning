@@ -12,11 +12,10 @@
 namespace MLP
 {
 	using LinearAlgebra::Matrix;
+	using func_type = float(*)(float);
 
 	struct ActFn
 	{
-		using func_type = float(*)(float);
-
 		func_type f = nullptr;
 		func_type df = nullptr;
 
@@ -38,12 +37,11 @@ namespace MLP
 	class mlp
 	{
 	public:
-		using func_type = float(*)(float);
 		enum distribution_type { normal, uniform };
 		enum initialization_type { He, Xavier };
 
 		mlp() = delete;
-		mlp(std::initializer_list<int> layer_sizes, std::initializer_list<func_type> activation_funcs);
+		mlp(std::initializer_list<int> layer_sizes, std::initializer_list<ActFn> activation_funcs);
 		~mlp() = default;
 
 		void set_values(distribution_type dist_type, initialization_type init_type);
@@ -51,12 +49,12 @@ namespace MLP
 	private:
 		std::vector<Matrix> weights;
 		std::vector<Matrix> biases;
-		std::vector<func_type> activation_functions;
+		std::vector<ActFn> activation_functions;
 		std::vector<Matrix> layers;
 
 	};
 
-	inline mlp::mlp(std::initializer_list<int> layer_sizes, std::initializer_list<func_type> activation_funcs)
+	inline mlp::mlp(std::initializer_list<int> layer_sizes, std::initializer_list<ActFn> activation_funcs)
 	{
 		if (layer_sizes.size() < 2)
 		{
@@ -80,7 +78,7 @@ namespace MLP
 		}
 
 		layers.push_back(Matrix(layer_sizes.begin()[layer_sizes.size() - 1], 1));
-		activation_functions = std::vector<func_type>(activation_funcs);
+		activation_functions = std::vector<ActFn>(activation_funcs);
 	}
 
 	inline void mlp::set_values(distribution_type dist_type, initialization_type init_type)
