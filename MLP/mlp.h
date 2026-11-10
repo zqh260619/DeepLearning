@@ -39,10 +39,14 @@ namespace MLP
 	{
 	public:
 		using func_type = float(*)(float);
+		enum distribution_type { normal, uniform };
+		enum initialization_type { He, Xavier };
 
 		mlp() = delete;
 		mlp(std::initializer_list<int> layer_sizes, std::initializer_list<func_type> activation_funcs);
 		~mlp() = default;
+
+		void set_values(distribution_type dist_type, initialization_type init_type);
 
 	private:
 		std::vector<Matrix> weights;
@@ -77,6 +81,66 @@ namespace MLP
 
 		layers.push_back(Matrix(layer_sizes.begin()[layer_sizes.size() - 1], 1));
 		activation_functions = std::vector<func_type>(activation_funcs);
+	}
+
+	inline void mlp::set_values(distribution_type dist_type, initialization_type init_type)
+	{
+		std::random_device rd;
+		std::mt19937 gen(rd());
+
+		if (dist_type == He)
+		{
+			if (init_type == normal)
+			{
+				float mu = 0.0f;
+
+				for (std::size_t i = 0; i < weights.size(); i++)
+				{
+					float sigma=sqrt(2.0f/weights[i].cols());
+					weights[i].set_random_normal(mu, sigma, gen);
+				}
+			}
+			else if (init_type == uniform)
+			{
+				for (std::size_t i = 0; i < weights.size(); i++)
+				{
+					float limit = sqrt(6.0f / weights[i].cols());
+					weights[i].set_random_uniform(-limit, limit, gen);
+				}
+			}
+			else
+			{
+				throw std::invalid_argument("Invalid initialization type");
+			}
+		}
+		else if (dist_type == Xavier)
+		{
+			if (init_type == normal)
+			{
+				float mu = 0.0f;
+				for (std::size_t i = 0; i < weights.size(); i++)
+				{
+					float sigma = sqrt(2.0f / (weights[i].cols() + weights[i].rows()));
+					weights[i].set_random_normal(mu, sigma, gen);
+				}
+			}
+			else if (init_type == uniform)
+			{
+				for (std::size_t i = 0; i < weights.size(); i++)
+				{
+					float limit = sqrt(6.0f / (weights[i].cols() + weights[i].rows()));
+					weights[i].set_random_uniform(-limit, limit, gen);
+				}
+			}
+			else
+			{
+				throw std::invalid_argument("Invalid initialization type");
+			}
+		}
+		else
+		{
+			throw std::invalid_argument("Invalid distribution type");
+		}
 	}
 
 }
