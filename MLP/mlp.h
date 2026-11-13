@@ -45,12 +45,14 @@ namespace MLP
 		~mlp() = default;
 
 		void set_values(distribution_type dist_type, initialization_type init_type);
+		const Matrix& forward(Matrix& input);
 
 	private:
 		std::vector<Matrix> weights;
 		std::vector<Matrix> biases;
 		std::vector<ActFn> activation_functions;
 		std::vector<Matrix> layers;
+		size_t num_layers;
 
 	};
 
@@ -64,6 +66,8 @@ namespace MLP
 		{
 			throw std::invalid_argument("Number of activation functions must be equal to number of layers - 1");
 		}
+
+		num_layers = layer_sizes.size();
 
 		for(std::size_t i = 0; i < layer_sizes.size() - 1; ++i)
 		{
@@ -139,6 +143,17 @@ namespace MLP
 		{
 			throw std::invalid_argument("Invalid distribution type");
 		}
+	}
+
+	inline const Matrix& mlp::forward(Matrix& input)
+	{
+		layers[0] = input;
+		for (size_t i = 0; i < num_layers - 1; ++i)
+		{
+			Matrix z = weights[i] * layers[i] + biases[i];
+			layers[i + 1] = z.calculate(activation_functions[i].f);
+		}
+		return layers[num_layers - 1];
 	}
 
 }
