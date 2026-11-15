@@ -60,33 +60,4 @@ namespace MLP
 
 	};
 
-	mlp::mlp(std::initializer_list<int> layer_sizes, std::initializer_list<ActFn> activation_funcs)
-	{
-		if (layer_sizes.size() < 2)
-		{
-			throw std::invalid_argument("MLP must have at least 2 layers");
-		}
-		if (activation_funcs.size() != layer_sizes.size() - 1)
-		{
-			throw std::invalid_argument("Number of activation functions must be equal to number of layers - 1");
-		}
-
-		num_layers = layer_sizes.size();
-
-		for(std::size_t i = 0; i < layer_sizes.size() - 1; ++i)
-		{
-			if (layer_sizes.begin()[i] <= 0 || layer_sizes.begin()[i + 1] <= 0)
-			{
-				throw std::invalid_argument("Layer sizes must be positive integers");
-			}
-
-			weights.push_back(Matrix(layer_sizes.begin()[i + 1], layer_sizes.begin()[i]));
-			biases.push_back(Matrix(layer_sizes.begin()[i + 1], 1));
-			layers.push_back(Matrix(layer_sizes.begin()[i], 1));
-		}
-
-		layers.push_back(Matrix(layer_sizes.begin()[layer_sizes.size() - 1], 1));
-		activation_functions = std::vector<ActFn>(activation_funcs);
-	}
-
 }

@@ -4,6 +4,7 @@
 #include<iterator>
 #include<stdexcept>
 #include<random>
+#include<iostream>
 
 namespace LinearAlgebra
 {
@@ -39,6 +40,19 @@ namespace LinearAlgebra
 		Matrix& operator-=(const Matrix& other) { *this = *this - other; return *this; }
 		Matrix& operator*=(float scalar) { *this = *this * scalar; return *this; }
 		Matrix& operator*=(const Matrix& other) { *this = *this * other; return *this; }
+		std::ostream& operator<<(std::ostream& os) const
+		{
+			for (size_t i = 0; i < rows_; ++i)
+			{
+				for (size_t j = 0; j < cols_; ++j)
+				{
+					os << (*this)(i, j) << " ";
+				}
+				os << std::endl;
+			}
+			return os;
+		}
+		friend std::ostream& operator<<(std::ostream& os, const Matrix& matrix) { return matrix << os; }
 
 	private:
 		size_t rows_, cols_;

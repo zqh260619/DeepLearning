@@ -2,6 +2,7 @@
 #include<iterator>
 #include<stdexcept>
 #include<random>
+#include<iostream>
 
 #ifndef PCH_H
 #define PCH_H
