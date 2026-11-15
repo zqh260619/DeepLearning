@@ -24,6 +24,9 @@ namespace MLP
 
 	};
 
+	extern const ActFn relu_fn;
+	extern const ActFn sigmoid_fn;
+
 	//class layer
 	//{
 	//public:
@@ -45,7 +48,8 @@ namespace MLP
 		~mlp() = default;
 
 		void set_values(distribution_type dist_type, initialization_type init_type);
-		const Matrix& forward(Matrix& input);
+		const Matrix& forward(const Matrix& input);
+		void backward(const Matrix& output, const Matrix& target, float learning_rate);
 
 	private:
 		std::vector<Matrix> weights;
@@ -56,7 +60,7 @@ namespace MLP
 
 	};
 
-	inline mlp::mlp(std::initializer_list<int> layer_sizes, std::initializer_list<ActFn> activation_funcs)
+	mlp::mlp(std::initializer_list<int> layer_sizes, std::initializer_list<ActFn> activation_funcs)
 	{
 		if (layer_sizes.size() < 2)
 		{
@@ -83,77 +87,6 @@ namespace MLP
 
 		layers.push_back(Matrix(layer_sizes.begin()[layer_sizes.size() - 1], 1));
 		activation_functions = std::vector<ActFn>(activation_funcs);
-	}
-
-	inline void mlp::set_values(distribution_type dist_type, initialization_type init_type)
-	{
-		std::random_device rd;
-		std::mt19937 gen(rd());
-
-		if (dist_type == He)
-		{
-			if (init_type == normal)
-			{
-				float mu = 0.0f;
-
-				for (std::size_t i = 0; i < weights.size(); i++)
-				{
-					float sigma=sqrt(2.0f/weights[i].cols());
-					weights[i].set_random_normal(mu, sigma, gen);
-				}
-			}
-			else if (init_type == uniform)
-			{
-				for (std::size_t i = 0; i < weights.size(); i++)
-				{
-					float limit = sqrt(6.0f / weights[i].cols());
-					weights[i].set_random_uniform(-limit, limit, gen);
-				}
-			}
-			else
-			{
-				throw std::invalid_argument("Invalid initialization type");
-			}
-		}
-		else if (dist_type == Xavier)
-		{
-			if (init_type == normal)
-			{
-				float mu = 0.0f;
-				for (std::size_t i = 0; i < weights.size(); i++)
-				{
-					float sigma = sqrt(2.0f / (weights[i].cols() + weights[i].rows()));
-					weights[i].set_random_normal(mu, sigma, gen);
-				}
-			}
-			else if (init_type == uniform)
-			{
-				for (std::size_t i = 0; i < weights.size(); i++)
-				{
-					float limit = sqrt(6.0f / (weights[i].cols() + weights[i].rows()));
-					weights[i].set_random_uniform(-limit, limit, gen);
-				}
-			}
-			else
-			{
-				throw std::invalid_argument("Invalid initialization type");
-			}
-		}
-		else
-		{
-			throw std::invalid_argument("Invalid distribution type");
-		}
-	}
-
-	inline const Matrix& mlp::forward(Matrix& input)
-	{
-		layers[0] = input;
-		for (size_t i = 0; i < num_layers - 1; ++i)
-		{
-			Matrix z = weights[i] * layers[i] + biases[i];
-			layers[i + 1] = z.calculate(activation_functions[i].f);
-		}
-		return layers[num_layers - 1];
 	}
 
 }
